@@ -7,16 +7,16 @@ class FilmLocation < ActiveRecord::Base
           actor_3 ILIKE :query1 OR actor_3 ILIKE :query2",
           query1: "#{query}%", query2: "% #{query}%")
     else
-      self.where("#{field} ILIKE ? OR #{field} ILIKE ?", "#{query}%", "% #{query}%")
+      self.where("#{field} ILIKE ? OR #{field} ILIKE ?",
+        "#{query}%", "% #{query}%")
     end
   end
 
   def self.search_suggestions_by(field, query)
     if field == "actor"
-      locations = self.search_by("actor", query)
-      actors = locations.map { |el| el["actor_1"] } +
-        locations.map { |el| el["actor_2"] } +
-        locations.map { |el| el["actor_3"] }
+      actors = self.search_by("actor_1", query).map { |el| el["actor_1"] } +
+        self.search_by("actor_2", query).map { |el| el["actor_2"] } +
+        self.search_by("actor_3", query).map { |el| el["actor_3"] }
       actors.uniq.select { |el| el }.slice(0, 20)
     else
       self

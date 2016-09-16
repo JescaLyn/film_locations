@@ -26,6 +26,7 @@ class SearchBar extends React.Component {
   autofill(e) {
     this.setState({ search_query: e.target.textContent }, () => {
       this.props.requestSuggestions(this.state);
+      this.props.requestLocations(this.state);
     });
   }
 
@@ -56,6 +57,7 @@ class SearchBar extends React.Component {
           <option value="production_company">Production Company</option>
           <option value="distributor">Distributor</option>
           <option value="director">Director</option>
+          <option value="writer">Writer</option>
           <option value="actor">Actor</option>
         </select>
         <input

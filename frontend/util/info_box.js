@@ -6,6 +6,8 @@ export const infoBox = location => {
           ${field[0].toUpperCase() + field.slice(1)}: ${location[field]}
         </p>
       `);
+    } else {
+      return "";
     }
   };
 
@@ -16,11 +18,15 @@ export const infoBox = location => {
         actorsArr.push(location[`actor_${i}`]);
       }
     }
-    return (`
-      <p>
-        Actors: ${actorsArr.join(", ")}
-      </p>
-    `);
+    if (actorsArr.length > 0) {
+      return (`
+        <p>
+          Actors: ${actorsArr.join(", ")}
+        </p>
+      `);
+    } else {
+      return ""; 
+    }
   };
 
   return (`
@@ -35,6 +41,7 @@ export const infoBox = location => {
       ${fieldTag("director")}
       ${fieldTag("writer")}
       ${actors()}
+      ${fieldTag("fun_facts")}
     </div>
   `);
 };
