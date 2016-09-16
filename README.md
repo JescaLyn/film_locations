@@ -4,7 +4,7 @@ This is a simple app using a Google Maps API and data from DataSF that allows a 
 
 ## Setup Instructions
 
-To setup this app, first clone or download this repo. Then run `bundle install` and `npm install` in the command line. Run `webpack` to bundle the JS scripts. Run a Rails server by using `rails s` in the command line. Navigate to `localhost:3000` and enjoy!
+To setup this app, first clone or download this repo. Then run `bundle install` and `npm install` in the command line. Run `webpack` to bundle the JS scripts. Run `be rake db:create`, `be rake db:migrate`, and `be rake db:seed` to setup the database. Run a Rails server by using `rails s` in the command line. Navigate to `localhost:3000` and enjoy!
 
 ## Technologies
 
