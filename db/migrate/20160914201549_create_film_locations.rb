@@ -2,8 +2,8 @@ class CreateFilmLocations < ActiveRecord::Migration
   def change
     create_table :film_locations do |t|
       t.string :title, null: false
-      t.integer :release_year, null: false
-      t.string :locations
+      t.string :release_year, null: false
+      t.string :locations, null: false
       t.text :fun_facts
       t.string :production_company
       t.string :distributor

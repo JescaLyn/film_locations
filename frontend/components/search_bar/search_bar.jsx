@@ -9,6 +9,8 @@ class SearchBar extends React.Component {
     };
     this.updateField = this.updateField.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.autofill = this.autofill.bind(this);
+    this.requestLocations = this.requestLocations.bind(this);
   }
 
   updateField(e) {
@@ -21,7 +23,30 @@ class SearchBar extends React.Component {
     });
   }
 
+  autofill(e) {
+    this.setState({ search_query: e.target.textContent }, () => {
+      this.props.requestSuggestions(this.state);
+    });
+  }
+
+  requestLocations() {
+    this.props.requestLocations(this.state);
+  }
+
   render() {
+    const dropdownItems = this.props.suggestions.map(suggestion => {
+      if (suggestion !== this.state.search_query) {
+        return (
+          <p
+            className="dropdown-line"
+            key={suggestion}
+            onClick={this.autofill}>
+            {suggestion}
+          </p>
+        );
+      }
+    });
+
     return (
       <div className="search-bar">
         <p>Search by</p>
@@ -37,6 +62,10 @@ class SearchBar extends React.Component {
           type="text"
           value={this.state.search_query}
           onChange={this.handleChange} />
+        <div className="dropdown">
+          {dropdownItems}
+        </div>
+        <button onClick={this.requestLocations}>Search</button>
       </div>
     );
   }

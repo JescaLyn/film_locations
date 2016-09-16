@@ -10,31 +10,14 @@ class Map extends React.Component {
     };
 
     this.map = new google.maps.Map(mapDOMNode, mapOptions);
-    // this.MarkerManager = new MarkerManager(this.map);
-    // this.MarkerManager.updateMarkers(this.props.benches);
-
-    this.map.addListener("idle", this._bounds.bind(this));
-  }
-
-  _coordsFromLatLng(latLng) {
-    return ({
-      lat: latLng.lat(),
-      lng: latLng.lng()
-    });
-  }
-
-  _bounds() {
-    const mapBounds = this.map.getBounds();
-    const northEast = mapBounds.getNorthEast();
-    const southWest = mapBounds.getSouthWest();
-    const bounds = {
-      northEast: { lat: northEast.lat(), lng: northEast.lng() },
-      southWest: { lat: southWest.lat(), lng: southWest.lng() }
-    };
+    this.MarkerManager = new MarkerManager(this.map);
+    this.MarkerManager.updateMarkers(this.props.locations,
+      this.map.getBounds());
   }
 
   componentDidUpdate() {
-    // this.MarkerManager.updateMarkers(this.props.benches);
+    this.MarkerManager.updateMarkers(this.props.locations,
+      this.map.getBounds());
   }
 
   render() {

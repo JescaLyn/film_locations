@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 20160914201549) do
 
   create_table "film_locations", force: :cascade do |t|
     t.string   "title",              null: false
-    t.integer  "release_year",       null: false
-    t.string   "locations"
+    t.string   "release_year",       null: false
+    t.string   "locations",          null: false
     t.text     "fun_facts"
     t.string   "production_company"
     t.string   "distributor"

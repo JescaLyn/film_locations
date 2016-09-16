@@ -1,51 +1,65 @@
+import { infoBox } from './info_box';
+
 class MarkerManager {
   constructor(map) {
     this.map = map;
     this.markers = [];
+    this.Geocoder = new google.maps.Geocoder();
   }
 
-  updateMarkers(benches) {
-    this.benches = benches;
+  updateMarkers(locations, bounds) {
+    this.locations = locations;
+    this.mapBounds = bounds;
     this._markersToRemove().forEach(marker => {
-      this._removerMarker(marker);
+      this._removeMarker(marker);
     });
-    this._benchesToAdd().forEach(bench => {
-      this._createMarkerFromBench(bench);
+    this._locationsToAdd().forEach(location => {
+      this._createMarkerFromLocation(location);
     });
   }
 
-  _benchesToAdd() {
-    const currentBenchIds = this.markers.map(marker => marker.benchId);
-    const benchesToAdd = [];
-    Object.keys(this.benches).forEach(benchId => {
-      if (!currentBenchIds.includes(parseInt(benchId))) {
-        benchesToAdd.push(this.benches[benchId]);
+  _locationsToAdd() {
+    const currentLocationIds = this.markers.map(marker => marker.locationId);
+    const locationsToAdd = [];
+    Object.keys(this.locations).forEach(locationId => {
+      if (!currentLocationIds.includes(parseInt(locationId))) {
+        locationsToAdd.push(this.locations[locationId]);
       }
     });
-    return benchesToAdd;
+    return locationsToAdd;
   }
 
-  _createMarkerFromBench(bench) {
-    const map = this.map;
-    const marker = new google.maps.Marker({
-      map,
-      animation: google.maps.Animation.DROP,
-      position: {lat: bench.lat, lng: bench.lng},
-      benchId: bench.id
-    });
-    const benchInfo = `<section><span>Description: ${bench.description}</span><span>Latitude: ${bench.lat}</span><span>Longitude: ${bench.lng}</span></section>`;
-    const infoWindow = new google.maps.InfoWindow({
-      content: benchInfo
-    });
-    marker.addListener("click", () => {
-      infoWindow.open(map, marker);
-    });
-    this.markers.push(marker);
+  _createMarkerFromLocation(location) {
+    this.Geocoder.geocode({
+      address: location.locations,
+      bounds: this.mapBounds
+    }, function (results, status) {
+      if (status == 'OK') {
+        const map = this.map;
+        const marker = new google.maps.Marker({
+          map,
+          animation: google.maps.Animation.DROP,
+          position: results[0].geometry.location,
+          locationId: location.id
+        });
+
+        const locationInfo = infoBox(location);
+        const infoWindow = new google.maps.InfoWindow({
+          content: locationInfo
+        });
+
+        marker.addListener("click", () => {
+          infoWindow.open(map, marker);
+        });
+        this.markers.push(marker);
+      }
+    }.bind(this));
+
   }
 
   _markersToRemove() {
     return this.markers.filter(marker => {
-      if (this.benches[marker.benchId]) {
+      if (this.locations[marker.locationId]) {
         return false;
       } else {
         return true;
@@ -53,7 +67,7 @@ class MarkerManager {
     });
   }
 
-  _removerMarker(marker) {
+  _removeMarker(marker) {
     marker.setMap(null);
     this.markers.splice(this.markers.indexOf(marker), 1);
   }

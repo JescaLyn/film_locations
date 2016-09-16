@@ -4,7 +4,7 @@ import { requestLocations } from '../../actions/location_actions';
 import SearchBar from './search_bar';
 
 const mapStateToProps = state => ({
-  suggestions: state.suggestions
+  suggestions: state.search
 });
 
 const mapDispatchToProps = dispatch => ({
